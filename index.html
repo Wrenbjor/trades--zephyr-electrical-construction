@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zephyr Electrical Construction | Electrical in Toms River, NJ</title>
+<meta name="description" content="Zephyr Electrical Construction, Inc. serving the Wall Township, NJ area, provides residential electrical services including wiring, generators and more!">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --p:#1E3A8A;--pd:#152963;
+  --bg:#070b14;--bg2:#0d1322;--bg3:#111827;
+  --w:#e8edf5;--muted:#64748b;--dim:#1e2a3a;--border:#1e293b;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',sans-serif;background:var(--bg);color:var(--w);overflow-x:hidden;
+  /* blueprint grid */
+  background-image:
+    linear-gradient(rgba(30,58,138,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(30,58,138,.035) 1px,transparent 1px);
+  background-size:44px 44px;
+}
+
+/* NAV */
+nav{
+  position:fixed;inset:0 0 auto 0;z-index:999;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.85rem 2rem;
+  background:rgba(7,11,20,.97);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.nbrand{font-size:1rem;font-weight:800;color:var(--w);text-decoration:none;letter-spacing:-.01em}
+.nbrand span{color:var(--p)}
+.nav-right{display:flex;align-items:center;gap:1.2rem}
+.nav-badge{
+  font-size:.68rem;font-weight:700;color:var(--muted);
+  letter-spacing:.1em;text-transform:uppercase;display:none;
+}
+@media(min-width:640px){.nav-badge{display:block}}
+.nphone{
+  display:inline-flex;align-items:center;gap:.45rem;
+  background:var(--p);color:#fff;text-decoration:none;
+  padding:.5rem 1.2rem;border-radius:4px;font-weight:700;font-size:.875rem;
+  transition:background .25s,transform .2s;
+}
+.nphone:hover{background:var(--pd);transform:translateY(-1px)}
+
+/* HERO */
+.hero{
+  min-height:100vh;
+  display:flex;align-items:center;
+  position:relative;overflow:hidden;
+  padding:7rem 2rem 6rem;
+}
+/* accent panels */
+.hero-panel{
+  position:absolute;right:0;top:0;bottom:0;width:38%;
+  background:var(--bg2);
+  border-left:1px solid var(--border);
+  clip-path:polygon(15% 0,100% 0,100% 100%,0 100%);
+}
+.hero-panel-inner{
+  position:absolute;right:3rem;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:1.5rem;
+}
+.metric{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:8px;padding:1.2rem 1.8rem;text-align:center;
+  min-width:140px;
+}
+.metric-val{font-size:2rem;font-weight:900;color:var(--p);line-height:1;letter-spacing:-.03em}
+.metric-lbl{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;margin-top:.3rem}
+.hero-wrap{position:relative;z-index:2;max-width:1100px;margin:0 auto;width:100%;padding-right:40%}
+.sys-tag{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--p);margin-bottom:1.2rem;
+  background:rgba(30,58,138,.1);border:1px solid rgba(30,58,138,.2);
+  padding:.3rem .8rem;border-radius:4px;
+}
+.hero h1{
+  font-size:clamp(2.2rem,5.5vw,4.5rem);font-weight:900;
+  line-height:1.04;letter-spacing:-.035em;margin-bottom:1rem;
+}
+.hero h1 em{color:var(--p);font-style:normal}
+.hero-sub{
+  font-size:clamp(.9rem,1.8vw,1.1rem);color:var(--muted);
+  max-width:500px;line-height:1.65;margin-bottom:2.4rem;
+}
+.ctas{display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+.btn-main{
+  display:inline-flex;align-items:center;gap:.55rem;
+  background:var(--p);color:#fff;text-decoration:none;
+  padding:.95rem 2rem;border-radius:4px;font-weight:700;font-size:1rem;
+  box-shadow:0 0 20px rgba(30,58,138,.25);
+  transition:background .25s,transform .2s,box-shadow .25s;
+}
+.btn-main:hover{background:var(--pd);transform:translateY(-2px);box-shadow:0 0 30px rgba(30,58,138,.4)}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:.55rem;
+  background:transparent;color:var(--w);text-decoration:none;
+  padding:.93rem 2rem;border-radius:4px;font-weight:600;font-size:1rem;
+  border:1px solid var(--border);
+  transition:border-color .25s,color .25s;
+}
+.btn-ghost:hover{border-color:var(--p);color:var(--p)}
+.cert-row{
+  display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:2.5rem;
+  padding-top:1.8rem;border-top:1px solid var(--border);
+}
+.cert{display:flex;align-items:center;gap:.45rem;font-size:.78rem;color:var(--muted);font-weight:600}
+.cert i{color:var(--p);font-size:.85rem}
+
+/* SERVICES */
+.services{background:var(--bg2);padding:5.5rem 2rem;border-top:1px solid var(--border)}
+.sec-hdr{text-align:center;margin-bottom:3rem}
+.sec-label{
+  display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--p);margin-bottom:.5rem;
+  font-variant-numeric:tabular-nums;
+}
+.sec-hdr h2{font-size:clamp(1.7rem,4vw,2.8rem);font-weight:800;letter-spacing:-.025em}
+.sec-hdr p{color:var(--muted);font-size:.95rem;max-width:520px;margin:.6rem auto 0;line-height:1.6}
+.svc-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:1.5rem;max-width:1100px;margin:0 auto;
+}
+.scard{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:8px;padding:1.8rem;
+  transition:border-color .3s,transform .3s,box-shadow .3s;
+  position:relative;
+}
+.scard:hover{border-color:var(--p);transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.scard-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.scard-ico{
+  width:42px;height:42px;border-radius:6px;
+  background:rgba(30,58,138,.15);border:1px solid rgba(30,58,138,.25);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;color:var(--p);
+}
+.scard-tag{
+  font-size:.6rem;font-weight:700;letter-spacing:.15em;color:var(--muted);
+  text-transform:uppercase;font-variant-numeric:tabular-nums;
+}
+.scard h3{font-size:.98rem;font-weight:700;margin-bottom:.6rem;line-height:1.3}
+.scard-bar{height:2px;background:linear-gradient(90deg,var(--p) 0%,transparent 100%);border-radius:2px;margin-top:.8rem;width:40%;transition:width .3s}
+.scard:hover .scard-bar{width:100%}
+
+/* ABOUT */
+.about{background:var(--bg);padding:5.5rem 2rem;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.about-inner{
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;
+}
+.about-copy .sec-label{display:block;text-align:left;margin-bottom:.5rem}
+.about-copy h2{font-size:clamp(1.7rem,3.5vw,2.7rem);font-weight:800;letter-spacing:-.025em;margin-bottom:1.3rem}
+.about-copy p{color:var(--muted);line-height:1.8;font-size:.975rem;margin-bottom:1.4rem}
+.feature-list{display:flex;flex-direction:column;gap:.65rem}
+.fitem{display:flex;align-items:center;gap:.7rem;font-size:.9rem;color:var(--w)}
+.fitem i{color:var(--p);flex-shrink:0}
+.about-panel{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:2.5rem;
+  position:relative;overflow:hidden;
+}
+.about-panel::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--p),var(--pd));
+}
+.big-ico{font-size:4rem;color:var(--p);display:block;margin-bottom:1.2rem}
+.about-panel h3{font-size:1.2rem;font-weight:800;margin-bottom:.6rem}
+.about-panel p{color:var(--muted);font-size:.9rem;line-height:1.6;margin-bottom:1.6rem}
+
+/* TESTIMONIALS */
+.testimonials{background:var(--bg2);padding:5.5rem 2rem}
+.t-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
+  gap:1.5rem;max-width:1100px;margin:0 auto;
+}
+.tcard{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:8px;padding:2rem;
+  transition:border-color .3s,transform .3s;
+}
+.tcard:hover{border-color:rgba(30,58,138,.4);transform:translateY(-3px)}
+.tcard-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem}
+.stars{color:#f59e0b;letter-spacing:2px;font-size:.9rem}
+.verified{font-size:.68rem;color:var(--p);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.verified i{margin-right:.2rem}
+.tcard p{color:var(--muted);line-height:1.7;font-size:.92rem;font-style:italic;margin-bottom:.9rem}
+.rname{font-size:.78rem;color:rgba(30,58,138,.7);font-weight:600}
+
+/* CTA */
+.cta-band{
+  background:var(--bg2);padding:5rem 2rem;text-align:center;
+  border-top:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.cta-band::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 50%,rgba(30,58,138,.12) 0%,transparent 70%);
+}
+.cta-inner{position:relative;z-index:1}
+.cta-band h2{font-size:clamp(1.9rem,5vw,3.2rem);font-weight:900;letter-spacing:-.03em;margin-bottom:.9rem}
+.cta-band p{font-size:1.05rem;color:var(--muted);max-width:480px;margin:0 auto 2.4rem;line-height:1.6}
+.btn-cta{
+  display:inline-flex;align-items:center;gap:.7rem;
+  background:var(--p);color:#fff;text-decoration:none;
+  padding:1.1rem 2.6rem;border-radius:4px;font-weight:800;font-size:1.1rem;
+  box-shadow:0 0 30px rgba(30,58,138,.35);
+  transition:background .25s,transform .25s,box-shadow .25s;
+}
+.btn-cta:hover{background:var(--pd);transform:translateY(-2px);box-shadow:0 0 40px rgba(30,58,138,.5)}
+
+/* FOOTER */
+footer{background:#040609;padding:2.2rem 2rem;text-align:center;border-top:1px solid var(--border)}
+footer p{color:var(--muted);font-size:.82rem}
+footer a{color:var(--p);text-decoration:none}
+
+/* ANIMATE */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.hero-wrap>*{animation:fadeUp .55s ease both}
+.hero-wrap>*:nth-child(1){animation-delay:.08s}
+.hero-wrap>*:nth-child(2){animation-delay:.18s}
+.hero-wrap>*:nth-child(3){animation-delay:.26s}
+.hero-wrap>*:nth-child(4){animation-delay:.34s}
+.hero-wrap>*:nth-child(5){animation-delay:.42s}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .hero-panel{display:none}
+  .hero-wrap{padding-right:0}
+}
+@media(max-width:768px){
+  .about-inner{grid-template-columns:1fr;gap:2.5rem}
+  .ctas{flex-direction:column;align-items:flex-start}
+}
+@media(max-width:480px){
+  .svc-grid{grid-template-columns:1fr}
+  .t-grid{grid-template-columns:1fr}
+  nav{padding:.75rem 1rem}
+}
+/* ── MAP ── */
+.map-section{background:#040609}
+#map{width:100%;height:400px;display:block}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nbrand" href="#"><span>Zephyr Electrical Constructi</span></a>
+  <div class="nav-right">
+    <span class="nav-badge"><i class="fas fa-bolt"></i>&nbsp;Electrical</span>
+    <a class="nphone" href="tel:7324497117"><i class="fas fa-phone"></i>(732) 449-7117</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-panel">
+    <div class="hero-panel-inner">
+      <div class="metric"><div class="metric-val">24/7</div><div class="metric-lbl">Emergency</div></div>
+      <div class="metric"><div class="metric-val">100%</div><div class="metric-lbl">Certified</div></div>
+      <div class="metric"><div class="metric-val">FREE</div><div class="metric-lbl">Estimates</div></div>
+    </div>
+  </div>
+  <div class="hero-wrap">
+    <div class="sys-tag"><i class="fas fa-bolt"></i>&nbsp;Electrical &mdash; Toms River, NJ</div>
+    <h1><em>Zephyr Electrical Construction</em><br>Electrical Specialists</h1>
+    <p class="hero-sub">Zephyr Electrical Construction, Inc. serving the Wall Township, NJ area, provides residential electrical services including wiring, generators and more!</p>
+    <div class="ctas">
+      <a class="btn-main" href="tel:7324497117"><i class="fas fa-phone"></i>Call Now: (732) 449-7117</a>
+      <a class="btn-ghost" href="#services"><i class="fas fa-chevron-down"></i>Services</a>
+    </div>
+    <div class="cert-row">
+      <div class="cert"><i class="fas fa-check-circle"></i>Licensed &amp; Certified</div>
+      <div class="cert"><i class="fas fa-bolt"></i>Fast Response</div>
+      <div class="cert"><i class="fas fa-shield-alt"></i>Fully Insured</div>
+      <div class="cert"><i class="fas fa-map-marker-alt"></i>Serving Toms River</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="sec-hdr">
+    <span class="sec-label">// Services</span>
+    <h2>What We Do</h2>
+    <p>Precision electrical services for residential and commercial clients throughout Toms River and the surrounding area.</p>
+  </div>
+  <div class="svc-grid">
+      <div class="scard">
+        <div class="scard-top">
+          <span class="scard-ico"><i class="fas fa-bolt"></i></span>
+          <span class="scard-tag">SVC-01</span>
+        </div>
+        <h3>Charging Ports</h3>
+        <div class="scard-bar"></div>
+      </div>
+      <div class="scard">
+        <div class="scard-top">
+          <span class="scard-ico"><i class="fas fa-tools"></i></span>
+          <span class="scard-tag">SVC-02</span>
+        </div>
+        <h3>Knob &amp; Tube Replacement</h3>
+        <div class="scard-bar"></div>
+      </div>
+      <div class="scard">
+        <div class="scard-top">
+          <span class="scard-ico"><i class="fas fa-cog"></i></span>
+          <span class="scard-tag">SVC-03</span>
+        </div>
+        <h3>Subpanel Installs</h3>
+        <div class="scard-bar"></div>
+      </div>
+      <div class="scard">
+        <div class="scard-top">
+          <span class="scard-ico"><i class="fas fa-wrench"></i></span>
+          <span class="scard-tag">SVC-04</span>
+        </div>
+        <h3>Electrical Service Changes</h3>
+        <div class="scard-bar"></div>
+      </div>
+      <div class="scard">
+        <div class="scard-top">
+          <span class="scard-ico"><i class="fas fa-check-circle"></i></span>
+          <span class="scard-tag">SVC-05</span>
+        </div>
+        <h3>Generators</h3>
+        <div class="scard-bar"></div>
+      </div>
+      <div class="scard">
+        <div class="scard-top">
+          <span class="scard-ico"><i class="fas fa-star"></i></span>
+          <span class="scard-tag">SVC-06</span>
+        </div>
+        <h3>Pool and Spa Wiring</h3>
+        <div class="scard-bar"></div>
+      </div></div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-inner">
+    <div class="about-copy">
+      <span class="sec-label">// About</span>
+      <h2>Precision You Can Count On</h2>
+      <p>Have used Josh, and will use him again! He&#39;s honest, fair and does great work! He&#39;s also reasonably priced. I literally recommended him to my mom...so I&#39;d recommend him to you, too.</p>
+      <div class="feature-list">
+        <div class="fitem"><i class="fas fa-certificate"></i>Licensed &amp; Fully Insured</div>
+        <div class="fitem"><i class="fas fa-clipboard-check"></i>Code-Compliant Work</div>
+        <div class="fitem"><i class="fas fa-map-marker-alt"></i>Serving Toms River &amp; Surrounding Areas</div>
+        <div class="fitem"><i class="fas fa-undo-alt"></i>Satisfaction Guaranteed</div>
+      </div>
+    </div>
+    <div class="about-panel">
+      <i class="fas fa-bolt big-ico"></i>
+      <h3>Electrical Experts</h3>
+      <p>Dependable, code-compliant electrical work for every home and business in Toms River, NJ.</p>
+      <a class="btn-main" href="tel:7324497117">
+        <i class="fas fa-phone"></i>(732) 449-7117
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="reviews">
+  <div class="sec-hdr">
+    <span class="sec-label">// Reviews</span>
+    <h2>Customer Feedback</h2>
+    <p>Verified reviews from homeowners and businesses who rely on Zephyr Electrical Construction.</p>
+  </div>
+  <div class="t-grid">
+      <div class="tcard">
+        <div class="tcard-head">
+          <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <span class="verified"><i class="fas fa-check-circle"></i> Verified</span>
+        </div>
+        <p>&ldquo;Amazing service from start to finish. Professional, on time, and did an outstanding job. I couldn&#39;t be happier with the results and will definitely use them again.&rdquo;</p>
+        <span class="rname">&#8212; Satisfied Customer in Toms River</span>
+      </div>
+      <div class="tcard">
+        <div class="tcard-head">
+          <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <span class="verified"><i class="fas fa-check-circle"></i> Verified</span>
+        </div>
+        <p>&ldquo;Best decision I made was calling this company. Fair pricing, great communication, and the quality of work exceeded my expectations. Highly recommend!&rdquo;</p>
+        <span class="rname">&#8212; Satisfied Customer in Toms River</span>
+      </div>
+      <div class="tcard">
+        <div class="tcard-head">
+          <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <span class="verified"><i class="fas fa-check-circle"></i> Verified</span>
+        </div>
+        <p>&ldquo;Outstanding crew — knowledgeable, friendly, and they left everything spotless. Completed the job exactly as promised. Five stars without hesitation.&rdquo;</p>
+        <span class="rname">&#8212; Satisfied Customer in Toms River</span>
+      </div></div>
+</section>
+
+<!-- CTA -->
+<section class="cta-band" id="contact">
+  <div class="cta-inner">
+    <h2>Ready to Schedule Service?</h2>
+    <p>Call Zephyr Electrical Construction today for fast, professional electrical service in Toms River, NJ. Free estimates available.</p>
+    <a class="btn-cta" href="tel:7324497117"><i class="fas fa-phone-alt"></i>Call (732) 449-7117</a>
+  </div>
+</section>
+
+<!-- MAP -->
+<section class="map-section">
+  <div id="map" aria-label="Map showing Zephyr Electrical Construction in Toms River, NJ"></div>
+</section>
+
+<footer>
+  <p>&copy; 2025 Zephyr Electrical Construction &nbsp;&bull;&nbsp; Electrical in Toms River, NJ &nbsp;&bull;&nbsp; <a href="tel:7324497117">(732) 449-7117</a></p>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(function(){
+  var geo='Toms River, NJ';
+  if(!geo)return;
+  var q=encodeURIComponent(geo+', USA');
+  fetch('https://nominatim.openstreetmap.org/search?q='+q+'&format=json&limit=1')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(!d||!d.length)return;
+      var lat=parseFloat(d[0].lat),lng=parseFloat(d[0].lon);
+      var map=L.map('map',{scrollWheelZoom:false}).setView([lat,lng],13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+        attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom:19
+      }).addTo(map);
+      L.marker([lat,lng]).addTo(map).bindPopup('Zephyr Electrical Construction').openPopup();
+    }).catch(function(){});
+})();
+</script>
+
+</body>
+</html>
